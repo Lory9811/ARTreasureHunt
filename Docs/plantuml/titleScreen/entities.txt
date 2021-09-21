@@ -1,0 +1,8 @@
+@startuml
+object TitleScreen
+object ButtonPlay
+object ButtonCreate
+
+ButtonPlay --> TitleScreen : PlayHunt()
+ButtonCreate --> TitleScreen : CreateHunt()
+@enduml

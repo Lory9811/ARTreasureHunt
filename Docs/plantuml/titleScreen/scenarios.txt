@@ -1,0 +1,19 @@
+Use Case: 			Play Game
+Primary Actors: 	Player
+Secondary Actors: 	None
+Description:		The player taps the button to start a new game
+Preconditions:		None
+Basic Flow:			1. The game prompts for game id
+					2. The game downloads the required assets
+					3. The game loads the main scene
+Outcome:			The chosen game is started
+
+Use Case: 			Create Game
+Primary Actors: 	Player
+Secondary Actors: 	None
+Description:		The player taps the button to create a custom hunt
+Preconditions:		None
+Basic Flow:			1. The game loads the editor
+					2. The player configures the custom hunt
+					3. The game uploads the data to the server
+Outcome:			A new custom hunt is added

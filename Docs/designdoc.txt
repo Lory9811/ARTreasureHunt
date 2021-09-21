@@ -1,0 +1,19 @@
+# AR Treasure Hunt
+
+## Overview
+The game is played in an enclosed space (eg. at home, in an escape room) or outdoors.
+The objective of the game is to find treasures hinted at by clues.
+Each treasure awards the player with a clue to find the next one after compleating a minigame.
+The first clue is given to the player at the start of the game.
+The player has to look at the treasures with their phone to collect them.
+When outdoors, the position of the player will be verified by GPS.
+When outdoors, position for the next treasure will be hinted at by a compass style indicator.
+
+The game organizers should be able to create their own treasure hunt by providing a reference picture for the treasures, hints and, if outdoors, providing the position for each treasure.
+After creating a treasure hunt it should be able to be shared with players.
+
+## Gameplay
+The game is divided in two sections: the hunt itself and the minigame played when the treasure is found.
+
+
+## Minigames

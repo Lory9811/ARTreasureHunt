@@ -1,0 +1,19 @@
+@startuml
+database accountsDatabase
+database gamesDatabase
+node authenticationServer {
+
+}
+node gameServer {
+
+}
+node smartphone {
+	artifact androidGameClient
+}
+
+authenticationServer -- accountsDatabase
+gameServer -- gamesDatabase
+
+androidGameClient -- authenticationServer : rest api
+androidGameClient -- gameServer	: rest api
+@enduml
