@@ -1,0 +1,15 @@
+@startuml
+
+skinparam dpi 300
+
+!include ../common/UnityEngine.iuml
+
+class TreasureHunt <<singleton>> {
+	-LoadMinigame()
+}
+
+GameObject <|-- TreasureHunt
+
+TreasureHunt --> SceneManager
+
+@enduml

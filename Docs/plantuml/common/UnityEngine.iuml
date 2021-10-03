@@ -1,0 +1,26 @@
+package "UnityEngine" {
+	package "SceneManagement" {
+		enum SceneManager.LoadSceneMode {
+			Single
+			Additive
+		}
+	
+		class SceneManager {
+			{static} +LoadScene(sceneBuildIndex: int, mode: SceneManager.LoadSceneMode = Single)
+			{static} +LoadSceneAsync(sceneBuildIndex: int, mode: SceneManager.LoadSceneMode = Single): AsyncOperation
+		}
+	}
+	
+	class GameObject {
+		+Start()
+		+Awake()
+		+Update()
+		+FixedUpdate()
+	}
+	
+	class Button
+	
+	class AsyncOperation
+	
+	GameObject <|-- Button
+}

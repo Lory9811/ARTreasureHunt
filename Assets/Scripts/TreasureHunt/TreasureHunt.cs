@@ -5,13 +5,8 @@ using TMPro;
 using System.Runtime.InteropServices;
 
 public class TreasureHunt : MonoBehaviour {
-    public TextMeshProUGUI text;
-
-    void Start() {
-        text.SetText("{0}.{1}", Vision.GetVersion().Item1, Vision.GetVersion().Item2);
-    }
-
-    void Update() {
-        
+    void OnGUI() {
+        //webcamImage.UpdateExternalTexture(webcamTexture.GetNativeTexturePtr());
+        //GUI.DrawTextureWithTexCoords(new Rect(0, 0, 1080, 2400), webcamImage, new Rect(0, 0, 1, 1));
     }
 }

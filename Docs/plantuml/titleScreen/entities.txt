@@ -1,8 +1,23 @@
 @startuml
-object TitleScreen
-object ButtonPlay
-object ButtonCreate
 
-ButtonPlay --> TitleScreen : PlayHunt()
-ButtonCreate --> TitleScreen : CreateHunt()
+skinparam dpi 300
+
+!include ../common/UnityEngine.iuml
+
+class TitleScreen <<singleton>> {
+	+PlayHunt()
+	+CreateHunt()
+}
+
+class ButtonPlay <<singleton>>
+class ButtonCreate <<singleton>>
+
+GameObject <|-- TitleScreen
+Button <|-- ButtonPlay
+Button <|-- ButtonCreate
+
+TitleScreen --> SceneManager
+ButtonPlay --> TitleScreen
+ButtonCreate --> TitleScreen
+
 @enduml
