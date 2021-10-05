@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Runtime.InteropServices;
+using OpenCvSharp;
 
 /// <summary>
 /// C# to Native interface
@@ -22,21 +23,21 @@ public class Vision {
     private static extern int GetMinorVersion();
 
     [DllImport("vision")]
-    private static extern void Threshold(IntPtr texture, int width, int height);
+    private static extern bool IsObjectInImage(Color32[] image, Color32[] obj,
+                             int imageWidth, int imageHeight,
+                             int objectWidth, int objectHeight);
 
     public static (int, int) GetVersion() {
         return (GetMajorVersion(), GetMinorVersion());
     }
 
-    public unsafe static void Test(Texture2D texture) {
-        Color32[] colorData = texture.GetPixels32();
-        
-        fixed (Color32* colorDataPointer = colorData) {
-            // TODO: check bounds, scale image to texture
-            Threshold((IntPtr)colorDataPointer, texture.width, texture.height);
-        }
+    public unsafe static bool DetectObject(Texture2D image, Texture2D obj) {
+        /*Color32[] imageColorData = image.GetPixels32();
+        Color32[] objectColorData = obj.GetPixels32();
 
-        texture.SetPixels32(colorData);
-        texture.Apply();
+        return IsObjectInImage(imageColorData, objectColorData,
+                image.width, image.height, obj.width, obj.height);*/
+        //Mat img = OpenCvSharp.Unity.TextureToMat(image);
+        return false;
     }
 }

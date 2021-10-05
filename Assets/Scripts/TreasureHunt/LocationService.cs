@@ -23,10 +23,11 @@ public class LocationService : MonoBehaviour {
     }
 
     void FixedUpdate() {
+        /*
         Debug.Log("location: " + Input.location.lastData.latitude + " " +
              Input.location.lastData.longitude + " " + 
              Input.location.lastData.altitude + " " + 
              Input.location.lastData.horizontalAccuracy + " " + 
-             Input.location.lastData.timestamp);
+             Input.location.lastData.timestamp);*/
     }
 }

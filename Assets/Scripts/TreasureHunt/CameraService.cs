@@ -17,13 +17,13 @@ public class CameraService : MonoBehaviour {
 
 
         webcamImage = new Texture2D(webcamTexture.height, webcamTexture.width);
-    }
-
-    void FixedUpdate() {
         webcamImage.UpdateExternalTexture(webcamTexture.GetNativeTexturePtr());
     }
 
-    public Texture2D GetCameraTexture() {
-        return webcamImage;
+    void FixedUpdate() {
+    }
+
+    public WebCamTexture GetCameraTexture() {
+        return webcamTexture;
     }
 }
