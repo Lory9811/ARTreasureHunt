@@ -4,12 +4,55 @@ skinparam dpi 300
 
 !include ../common/UnityEngine.iuml
 
-class TreasureHunt <<singleton>> {
-	-LoadMinigame()
+class TrackedBehaviour {
+	+HandleTargetStatusChanged(previous: Status, new: Status)
 }
 
-GameObject <|-- TreasureHunt
+class Treasure {
+	+GetId(): string
+	+GetTexture(): Texture2D
+	+Activate()
+	+Deactivate()
+	-gameObject: GameObject
+}
 
-TreasureHunt --> SceneManager
+class TreasureHunt {
+	-server: GameServer
+}
+
+abstract GameServer {
+	{abstract} +GetTreasureHunt(id: string): TreasureHunt
+	{abstract} -GetTreasure(id: string): Treasure
+}
+
+class LocalServer {
+	+GetTreasureHunt(id: string): TreasureHunt
+}
+
+class RemoteServer {
+	+GetTreasureHunt(id: string): TreasureHunt
+}
+
+class Minigame {
+	+Activate()
+}
+
+class TreasureHuntManager <<singleton>> {
+	-minigame: Minigame
+}
+
+GameObject <|-- TreasureHuntManager
+GameObject <|-- GameServer
+GameServer <|-- LocalServer
+GameServer <|-- RemoteServer
+
+TreasureHuntManager --> SceneManager
+TreasureHuntManager --> GameServer
+TreasureHuntManager --> TreasureHunt
+TreasureHuntManager --> Treasure
+TreasureHunt "1" o-- "*" Treasure
+GameServer --> Treasure
+GameServer --> TreasureHunt
+Treasure --> TrackedBehaviour
 
 @enduml

@@ -3,11 +3,17 @@ using UnityEngine.Events;
 using Vuforia;
 
 public class TrackedImageBehaviour : DefaultObserverEventHandler {
+    public delegate void DetectionCallback();
+
+    private DetectionCallback callback = null;
+
     protected override void HandleTargetStatusChanged(Status previousStatus, Status newStatus) {
         if (newStatus == Status.TRACKED && previousStatus != newStatus) {
-            Debug.Log("Tracker detected");
-            Debug.Log(gameObject.name);
-            Handheld.Vibrate();
+            if (callback != null) callback();
         }
+    }
+
+    public void SetDetectionCallback(DetectionCallback callback) {
+        this.callback = callback;
     }
 }

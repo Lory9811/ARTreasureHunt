@@ -10,8 +10,7 @@ node gameServer {
 node smartphone {
 	artifact androidGameClient
 	artifact unityEngine
-	artifact vision
-	artifact opencv_java4
+	artifact vuforia
 }
 
 authenticationServer -- accountsDatabase
@@ -20,6 +19,5 @@ gameServer -- gamesDatabase
 androidGameClient -- authenticationServer : rest api
 androidGameClient -- gameServer	: rest api
 androidGameClient -- unityEngine
-androidGameClient -- vision
-vision -- opencv_java4
+androidGameClient -- vuforia
 @enduml

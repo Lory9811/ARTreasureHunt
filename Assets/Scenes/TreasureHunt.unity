@@ -293,7 +293,7 @@ GameObject:
   - component: {fileID: 666339137}
   - component: {fileID: 666339135}
   m_Layer: 0
-  m_Name: TreasureHunt
+  m_Name: TreasureHuntManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -337,7 +337,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa840ca5260330a48a8df82d455b4e59, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  testObject: {fileID: 2800000, guid: 9d79ed8b4f6b70b4b8e51877705e0f49, type: 3}
 --- !u!1 &832993392
 GameObject:
   m_ObjectHideFlags: 0
@@ -962,4 +961,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa840ca5260330a48a8df82d455b4e59, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  testObject: {fileID: 2800000, guid: aacc1eda50d5dee439151085b4fde483, type: 3}
