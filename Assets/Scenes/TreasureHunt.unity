@@ -223,7 +223,7 @@ AudioListener:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 641016204}
-  m_Enabled: 1
+  m_Enabled: 0
 --- !u!20 &641016206
 Camera:
   m_ObjectHideFlags: 0
@@ -293,7 +293,7 @@ GameObject:
   - component: {fileID: 666339137}
   - component: {fileID: 666339135}
   m_Layer: 0
-  m_Name: TreasureHuntManager
+  m_Name: GameManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -332,7 +332,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 666339133}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: aa840ca5260330a48a8df82d455b4e59, type: 3}
   m_Name: 
@@ -852,12 +852,12 @@ GameObject:
   - component: {fileID: 1985945395}
   - component: {fileID: 1985945400}
   m_Layer: 0
-  m_Name: ARCamera
+  m_Name: ARCamera (old)
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1985945395
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -956,7 +956,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1985945394}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: aa840ca5260330a48a8df82d455b4e59, type: 3}
   m_Name: 

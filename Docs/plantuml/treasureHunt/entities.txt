@@ -1,58 +1,57 @@
 @startuml
 
-skinparam dpi 300
-
 !include ../common/UnityEngine.iuml
+!include ../common/Vuforia.iuml
 
-class TrackedBehaviour {
-	+HandleTargetStatusChanged(previous: Status, new: Status)
-}
+package "TreasureHunt" {
+	+class TreasureHunt {
+		+LoadHunt(huntId: string, server: GameServer)
+		-server: GameServer
+	}
 
-class Treasure {
-	+GetId(): string
-	+GetTexture(): Texture2D
-	+Activate()
-	+Deactivate()
-	-gameObject: GameObject
-}
-
-class TreasureHunt {
-	-server: GameServer
+	-class Treasure {
+		+Treasure(descriptor, server, callback)
+		-hint: string
+	}
+	
+	-class TrackedImageBehaviour {
+		+SetDetectionCallback(callback)
+		#HandleTargetStatusChanged(previous: Status, new: Status)
+	}
+	
+	TreasureHunt "1" o-- "*" Treasure
+	Treasure --> TrackedImageBehaviour
+	Treasure --> ImageTargetBehaviour
 }
 
 abstract GameServer {
-	{abstract} +GetTreasureHunt(id: string): TreasureHunt
-	{abstract} -GetTreasure(id: string): Treasure
+	{abstract} +GetHuntDescriptorLocation(id: string): string
+	{abstract} +GetImageLocation(url: string): string
+	{abstract} +GetHintLocation(url: string): string
 }
 
-class LocalServer {
-	+GetTreasureHunt(id: string): TreasureHunt
-}
+class LocalServer
 
-class RemoteServer {
-	+GetTreasureHunt(id: string): TreasureHunt
-}
+class RemoteServer
 
 class Minigame {
 	+Activate()
 }
 
-class TreasureHuntManager <<singleton>> {
-	-minigame: Minigame
+class GameManager <<singleton>> {
+	+StartChallenge(level: int)
+	-currentTreasure: int
 }
 
-GameObject <|-- TreasureHuntManager
-GameObject <|-- GameServer
+GameObject <|-- GameManager
 GameServer <|-- LocalServer
 GameServer <|-- RemoteServer
 
-TreasureHuntManager --> SceneManager
-TreasureHuntManager --> GameServer
-TreasureHuntManager --> TreasureHunt
-TreasureHuntManager --> Treasure
-TreasureHunt "1" o-- "*" Treasure
-GameServer --> Treasure
-GameServer --> TreasureHunt
-Treasure --> TrackedBehaviour
+GameManager --> Minigame
+GameManager --> SceneManager
+GameManager --> GameServer
+GameManager --> TreasureHunt
+
+DefaultObserverEventHandler <|-- TrackedImageBehaviour 
 
 @enduml

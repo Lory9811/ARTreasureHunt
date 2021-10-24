@@ -1,0 +1,9 @@
+package "Vuforia" {	
+	class ScalableDataSetTrackableBehaviour
+
+	class ImageTargetBehaviour
+	
+	class DefaultObserverEventHandler
+	
+	ScalableDataSetTrackableBehaviour <|-- ImageTargetBehaviour
+}

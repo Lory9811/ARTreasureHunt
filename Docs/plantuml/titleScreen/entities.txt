@@ -1,7 +1,5 @@
 @startuml
 
-skinparam dpi 300
-
 !include ../common/UnityEngine.iuml
 
 class TitleScreen <<singleton>> {
