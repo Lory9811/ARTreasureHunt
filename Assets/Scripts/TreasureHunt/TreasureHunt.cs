@@ -22,21 +22,25 @@ public class TreasureHunt : MonoBehaviour {
     private class Treasure {
         string hint;
         ImageTargetBehaviour target;
+        int id;
 
         public delegate void DetectionCallback(Treasure treasure);
 
-        public Treasure() {
-
-        }
-        
-        public Treasure(TreasureHunt hunt, TreasureDescriptor descriptor, GameServer server, DetectionCallback callback) {
-            hunt.StartCoroutine(DownloadTreasure(descriptor.url, server, () => callback(this)));
-            hunt.StartCoroutine(DownloadHint(descriptor.hint, server));
+        public Treasure(int id) {
+            this.id = id;
         }
 
         public string GetName() {
             return target.gameObject.name;
-        } 
+        }
+
+        public int GetId() {
+            return id;
+        }
+
+        public string GetHint() {
+            return hint;
+        }
 
         public IEnumerator DownloadTreasure(string path, GameServer server, TrackedImageBehaviour.DetectionCallback callback) {
             Debug.Log(server.GetImageLocation(path));
@@ -82,25 +86,22 @@ public class TreasureHunt : MonoBehaviour {
 
     void Start() {
         DontDestroyOnLoad(gameObject);
-    }
-
-    void Awake() {
-        var manager = GameObject.Find("GameManager")?.GetComponent<GameManager>();
-        if (manager != null) {
-            gameManager = manager;
-            Debug.Log(gameManager);
-        }
+        SceneManager.sceneLoaded += (Scene scene, LoadSceneMode mode) => {
+            var manager = GameObject.Find("GameManager")?.GetComponent<GameManager>();
+            if (manager != null) {
+                gameManager = manager;
+            }
+        };
     }
 
     public void LoadHunt(string id, GameServer server) {
-        //StartCoroutine(DownloadHunt(id, server));
         StartCoroutine(DoLoad(id, server));
     }
 
     private void OnTreasureSeen(Treasure treasure) {
         Debug.Log("Found treasure " + treasure.GetName());
         Handheld.Vibrate();
-        gameManager?.StartChallenge(0);
+        gameManager?.StartChallenge(treasure.GetId(), treasure.GetHint());
     }
 
     private IEnumerator DoLoad(string id, GameServer server) {
@@ -116,14 +117,15 @@ public class TreasureHunt : MonoBehaviour {
                 case UnityWebRequest.Result.Success:
                     var huntDescriptor = JsonUtility.FromJson<HuntDescriptor>(request.downloadHandler.text);
                     var treasuresList = new List<Treasure>();
-                    foreach (var treasure in huntDescriptor.treasures) {
-                        //treasuresList.Add(new Treasure(this, treasure, server, OnTreasureSeen));
-                        var tempTreasure = new Treasure();
-                        treasuresList.Add(new Treasure());
-                        Debug.Log("Downloading Treasure" + treasure.url);
+                    for (var i = 0; i != huntDescriptor.treasures.Length; i++) {
+                        //foreach (var treasure in huntDescriptor.treasures) {
+                        var treasure = huntDescriptor.treasures[i];
+                        var tempTreasure = new Treasure(i);
+                        treasuresList.Add(tempTreasure);
+                        Debug.Log("Downloading treasure " + i);
                         yield return StartCoroutine(tempTreasure.DownloadTreasure(treasure.url, server, () => OnTreasureSeen(tempTreasure)));
                         yield return StartCoroutine(tempTreasure.DownloadHint(treasure.hint, server));
-                        Debug.Log("Finished downloading" + treasure.url);
+                        Debug.Log("Finished downloading " + i);
                     }
                     treasures = treasuresList.ToArray();
                     break;

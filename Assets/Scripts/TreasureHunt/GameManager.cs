@@ -12,7 +12,7 @@ public class GameManager : MonoBehaviour {
         VuforiaBehaviour.Instance.VideoBackground.StartVideoBackgroundRendering();
     }
 
-    public void StartChallenge(int level) {
-
+    public void StartChallenge(int level, string hint) {
+        Debug.Log(level);
     }
 }
