@@ -6,6 +6,7 @@
 package "TreasureHunt" {
 	+class TreasureHunt {
 		+LoadHunt(huntId: string, server: GameServer)
+		-OnTreasureSeen(treasure: Treasure)
 		-server: GameServer
 	}
 
@@ -19,24 +20,54 @@ package "TreasureHunt" {
 		#HandleTargetStatusChanged(previous: Status, new: Status)
 	}
 	
-	TreasureHunt "1" o-- "*" Treasure
+	+class HuntDescriptor {
+		+format: string
+	}
+	
+	+class TreasureDescriptor {
+		+type: string
+		+url: string
+		+hint: string
+	}
+	
+	HuntDescriptor "1" o-- "*" TreasureDescriptor: "treasures"
+	
+	TreasureHunt "1" o-- "*" Treasure: "treasures"
 	Treasure --> TrackedImageBehaviour
 	Treasure --> ImageTargetBehaviour
+	
+	note "JSON deserialization classes" as json_note
+	
+	HuntDescriptor .. json_note
+	TreasureDescriptor .. json_note
 }
 
 abstract GameServer {
-	{abstract} +GetHuntDescriptorLocation(id: string): string
-	{abstract} +GetImageLocation(url: string): string
-	{abstract} +GetHintLocation(url: string): string
+	{abstract} #GetHuntDescriptorLocation(id: string): string
+	{abstract} #GetImageLocation(url: string): string
+	{abstract} #GetHintLocation(url: string): string
+	+DownloadDescriptor(id: string, callback: void(HuntDescriptor)): IEnumerator
+	+DownloadImage(url: string, callback: void(Texture2D)): IEnumerator
+	+DownloadHint(url: string, callback: void(string)): IEnumerator
 }
 
-class LocalServer
+class LocalServer {
+	#GetHuntDescriptorLocation(id: string): string
+	#GetImageLocation(url: string): string
+	#GetHintLocation(url: string): string
+}
 
-class RemoteServer
+class RemoteServer {
+	#GetHuntDescriptorLocation(id: string): string
+	#GetImageLocation(url: string): string
+	#GetHintLocation(url: string): string
+}
 
-class Minigame {
+abstract Minigame {
 	+Activate()
 }
+
+class Mastermind
 
 class GameManager <<singleton>> {
 	+StartChallenge(level: int)
@@ -47,10 +78,14 @@ GameObject <|-- GameManager
 GameServer <|-- LocalServer
 GameServer <|-- RemoteServer
 
+Minigame <|-- Mastermind
+
 GameManager --> Minigame
 GameManager --> SceneManager
 GameManager --> GameServer
 GameManager --> TreasureHunt
+
+GameServer --> HuntDescriptor
 
 DefaultObserverEventHandler <|-- TrackedImageBehaviour 
 

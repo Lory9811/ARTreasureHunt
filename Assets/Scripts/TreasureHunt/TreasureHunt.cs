@@ -6,14 +6,20 @@ using UnityEngine.SceneManagement;
 using Vuforia;
 
 public class TreasureHunt : MonoBehaviour {
+    /**
+     * Temporary class for deserialization
+     */
     [System.Serializable]
-    private class HuntDescriptor {
+    public class HuntDescriptor {
         public string format;
         public TreasureDescriptor[] treasures;
     }
 
+    /**
+     * Temporary class for deserialization
+     */
     [System.Serializable]
-    private class TreasureDescriptor {
+    public class TreasureDescriptor {
         public string type;
         public string url;
         public string hint;
@@ -42,50 +48,23 @@ public class TreasureHunt : MonoBehaviour {
             return hint;
         }
 
-        public IEnumerator DownloadTreasure(string path, GameServer server, TrackedImageBehaviour.DetectionCallback callback) {
-            Debug.Log(server.GetImageLocation(path));
-            using (var request = UnityWebRequestTexture.GetTexture(server.GetImageLocation(path))) {
-                yield return request.SendWebRequest();
-
-                switch (request.result) {
-                    case UnityWebRequest.Result.Success:
-                        target = VuforiaBehaviour.Instance.ObserverFactory.CreateImageTarget(
-                            DownloadHandlerTexture.GetContent(request), 0.10f, path);
-                        var handler = target.gameObject.AddComponent<TrackedImageBehaviour>();
-                        handler.SetDetectionCallback(callback);
-                        Debug.Log("Treasure downloaded " + path);
-                        break;
-                    default:
-                        Debug.LogError(request.error);
-                        break;
-                }
-            }
-        }
-
-        public IEnumerator DownloadHint(string path, GameServer server) {
-            Debug.Log(server.GetHintLocation(path));
-            using (var request = UnityWebRequest.Get(server.GetHintLocation(path))) {
-                yield return request.SendWebRequest();
-
-                switch (request.result) {
-                    case UnityWebRequest.Result.Success:
-                        hint = request.downloadHandler.text;
-                        Debug.Log("Hint downloaded " + path);
-                        break;
-                    default:
-                        Debug.LogError(request.error);
-                        break;
-                }
-            }
+        public IEnumerator Init(TreasureDescriptor descriptor, GameServer server, DetectionCallback callback) {
+            yield return server.DownloadImage(descriptor.url, (Texture2D texture) => {
+                target = VuforiaBehaviour.Instance.ObserverFactory.CreateImageTarget(
+                    texture, 0.10f, "Treasure_" + id);
+                var handler = target.gameObject.AddComponent<TrackedImageBehaviour>();
+                handler.SetDetectionCallback(() => callback(this));
+            });
+            yield return server.DownloadHint(descriptor.hint, (string hint) => {
+                this.hint = hint;
+            });
         }
     }
     
     private Treasure[] treasures;
-
     private GameManager gameManager;
 
     void Start() {
-        DontDestroyOnLoad(gameObject);
         SceneManager.sceneLoaded += (Scene scene, LoadSceneMode mode) => {
             var manager = GameObject.Find("GameManager")?.GetComponent<GameManager>();
             if (manager != null) {
@@ -94,48 +73,46 @@ public class TreasureHunt : MonoBehaviour {
         };
     }
 
+    /**
+     * Download hunt data and switch to scene
+     * @param id The hunt's id
+     * @param server The data source server
+     */
     public void LoadHunt(string id, GameServer server) {
+        DontDestroyOnLoad(gameObject);
         StartCoroutine(DoLoad(id, server));
     }
 
+    /**
+     * Callback for treasure detection
+     * @param treasure The detected treasure
+     */
     private void OnTreasureSeen(Treasure treasure) {
         Debug.Log("Found treasure " + treasure.GetName());
         Handheld.Vibrate();
         gameManager?.StartChallenge(treasure.GetId(), treasure.GetHint());
     }
 
+    /**
+     * Treasure hunt download and scene load coroutine
+     * @param id The hunt's id
+     * @param server The data source server
+     */
     private IEnumerator DoLoad(string id, GameServer server) {
         yield return SceneManager.LoadSceneAsync("TreasureHunt", LoadSceneMode.Single);
-        yield return DownloadHunt(id, server);
-    }
-
-    private IEnumerator DownloadHunt(string path, GameServer server) {
-        using (var request = UnityWebRequest.Get(server.GetHuntDescriptorLocation(path))) {
-            yield return request.SendWebRequest();
-
-            switch (request.result) {
-                case UnityWebRequest.Result.Success:
-                    var huntDescriptor = JsonUtility.FromJson<HuntDescriptor>(request.downloadHandler.text);
-                    var treasuresList = new List<Treasure>();
-                    for (var i = 0; i != huntDescriptor.treasures.Length; i++) {
-                        //foreach (var treasure in huntDescriptor.treasures) {
-                        var treasure = huntDescriptor.treasures[i];
-                        var tempTreasure = new Treasure(i);
-                        treasuresList.Add(tempTreasure);
-                        Debug.Log("Downloading treasure " + i);
-                        yield return StartCoroutine(tempTreasure.DownloadTreasure(treasure.url, server, () => OnTreasureSeen(tempTreasure)));
-                        yield return StartCoroutine(tempTreasure.DownloadHint(treasure.hint, server));
-                        Debug.Log("Finished downloading " + i);
-                    }
-                    treasures = treasuresList.ToArray();
-                    break;
-                default:
-                    Debug.LogError(request.error);
-                    break;
+        SceneManager.MoveGameObjectToScene(gameObject, SceneManager.GetActiveScene());
+        yield return server.DownloadDescriptor(id, (HuntDescriptor descriptor) => {
+            var treasuresList = new List<Treasure>();
+            for (var i = 0; i != descriptor.treasures.Length; i++) {
+                var treasure = descriptor.treasures[i];
+                var tempTreasure = new Treasure(i);
+                treasuresList.Add(tempTreasure);
+                StartCoroutine(tempTreasure.Init(treasure, server, OnTreasureSeen));
             }
-        }
+            treasures = treasuresList.ToArray();
+        });
     }
-
+    
     private IEnumerator SwitchScene() {
         var load = SceneManager.LoadSceneAsync("TreasureHunt", LoadSceneMode.Single);
         load.allowSceneActivation = false;

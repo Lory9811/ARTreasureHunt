@@ -9,6 +9,7 @@ public class LocationService : MonoBehaviour {
         }
 
         Input.location.Start(0.5f, 1.0f);
+        Input.compass.enabled = true;
 
         int timeout = 10;
         while (Input.location.status == LocationServiceStatus.Initializing) {
@@ -29,5 +30,13 @@ public class LocationService : MonoBehaviour {
              Input.location.lastData.altitude + " " + 
              Input.location.lastData.horizontalAccuracy + " " + 
              Input.location.lastData.timestamp);*/
+    }
+
+    public float GetCurrentHeading() {
+        return Input.compass.trueHeading;
+    }
+
+    public LocationInfo GetLocationInfo() {
+        return Input.location.lastData;
     }
 }
