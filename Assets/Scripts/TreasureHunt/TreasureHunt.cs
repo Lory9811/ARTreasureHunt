@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
 using Vuforia;
 
@@ -67,6 +66,7 @@ public class TreasureHunt : MonoBehaviour {
     void Start() {
         SceneManager.sceneLoaded += (Scene scene, LoadSceneMode mode) => {
             var manager = GameObject.Find("GameManager")?.GetComponent<GameManager>();
+            Debug.Log(manager);
             if (manager != null) {
                 gameManager = manager;
             }
@@ -89,8 +89,7 @@ public class TreasureHunt : MonoBehaviour {
      */
     private void OnTreasureSeen(Treasure treasure) {
         Debug.Log("Found treasure " + treasure.GetName());
-        Handheld.Vibrate();
-        gameManager?.StartChallenge(treasure.GetId(), treasure.GetHint());
+        gameManager?.StartChallenge(treasure.GetId(), treasure.GetHint(), "mastermind");
     }
 
     /**
@@ -100,11 +99,16 @@ public class TreasureHunt : MonoBehaviour {
      */
     private IEnumerator DoLoad(string id, GameServer server) {
         yield return SceneManager.LoadSceneAsync("TreasureHunt", LoadSceneMode.Single);
-        SceneManager.MoveGameObjectToScene(gameObject, SceneManager.GetActiveScene());
+        Debug.Log("Test");
+        //SceneManager.MoveGameObjectToScene(gameObject, SceneManager.GetActiveScene());
+        Debug.Log(server);
         yield return server.DownloadDescriptor(id, (HuntDescriptor descriptor) => {
             var treasuresList = new List<Treasure>();
+            Debug.Log(treasuresList);
+            Debug.Log(descriptor);
             for (var i = 0; i != descriptor.treasures.Length; i++) {
                 var treasure = descriptor.treasures[i];
+                Debug.Log(treasure);
                 var tempTreasure = new Treasure(i);
                 treasuresList.Add(tempTreasure);
                 StartCoroutine(tempTreasure.Init(treasure, server, OnTreasureSeen));

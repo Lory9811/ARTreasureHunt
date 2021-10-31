@@ -3,10 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using Vuforia;
 
-public class Mastermind : Minigame {
-    public Texture2DArray buttons;
+[RequireComponent(typeof(Minigame))]
+public class Mastermind : MonoBehaviour {
+    private Minigame minigame;
 
-    public override void Init() {
+    void Start() {
+        minigame = gameObject.GetComponent<Minigame>();
+        minigame.SetCleanupCallback(() => {
+            Destroy(gameObject);
+        });
         VuforiaBehaviour.Instance.VideoBackground.StopVideoBackgroundRendering();
+    }
+
+    public void Button() {
+        minigame.CompleteGame(true);
+        VuforiaBehaviour.Instance.VideoBackground.StartVideoBackgroundRendering();
     }
 }
