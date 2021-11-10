@@ -100,7 +100,7 @@ public class TreasureHunt : MonoBehaviour {
     private IEnumerator DoLoad(string id, GameServer server) {
         yield return SceneManager.LoadSceneAsync("TreasureHunt", LoadSceneMode.Single);
         Debug.Log("Test");
-        //SceneManager.MoveGameObjectToScene(gameObject, SceneManager.GetActiveScene());
+        SceneManager.MoveGameObjectToScene(gameObject, SceneManager.GetActiveScene());
         Debug.Log(server);
         yield return server.DownloadDescriptor(id, (HuntDescriptor descriptor) => {
             var treasuresList = new List<Treasure>();

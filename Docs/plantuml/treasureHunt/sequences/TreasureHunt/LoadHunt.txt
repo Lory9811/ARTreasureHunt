@@ -1,0 +1,55 @@
+@startuml
+
+participant TreasureHunt
+participant GameServer
+participant SceneManager
+
+[-> TreasureHunt: LoadHunt()
+activate TreasureHunt
+
+TreasureHunt -> GameServer: DownloadDescriptor()
+activate GameServer
+TreasureHunt <- GameServer
+deactivate GameServer
+
+loop Foreach treasure in descriptor
+
+TreasureHunt -> GameServer: DownloadTreasure()
+activate GameServer
+TreasureHunt <- GameServer
+deactivate GameServer
+
+create Treasure
+TreasureHunt -> Treasure: new
+
+TreasureHunt -> Treasure: Init
+activate Treasure
+
+Treasure -> GameServer: DownloadImage()
+activate GameServer
+Treasure <- GameServer
+deactivate GameServer
+
+create TrackedImageBehaviour
+Treasure -> TrackedImageBehaviour: new
+Treasure -> TrackedImageBehaviour: SetDetectionCallback
+activate TrackedImageBehaviour
+Treasure <- TrackedImageBehaviour
+deactivate TrackedImageBehaviour
+
+Treasure -> GameServer: DownloadHint()
+activate GameServer
+Treasure <- GameServer
+deactivate GameServer
+
+TreasureHunt <- Treasure
+deactivate Treasure
+
+end
+
+TreasureHunt ->> SceneManager: LoadScene()
+
+[<- TreasureHunt
+deactivate TreasureHunt
+
+@enduml

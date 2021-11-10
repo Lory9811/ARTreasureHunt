@@ -64,19 +64,30 @@ class RemoteServer {
 }
 
 abstract Minigame {
-	+Activate()
+	+SetHintText(hint: string)
+	+SetCompletionCallback(callback)
+	+SetCleanupCallback(callback)
+	+CompleteGame(success: bool)
+	+Cleanup()
 }
 
 class Mastermind
 
 class GameManager <<singleton>> {
-	+StartChallenge(level: int)
+	+StartChallenge(level: int, hint: string, minigame: string)
 	-currentTreasure: int
+	-inChallenge: bool
+}
+
+class Hint {
+	+SetHintText(text: string)
+	+SetConfirmCallback(callback)
 }
 
 GameObject <|-- GameManager
 GameServer <|-- LocalServer
 GameServer <|-- RemoteServer
+GameObject <|-- Hint
 
 Minigame <|-- Mastermind
 
@@ -84,6 +95,7 @@ GameManager --> Minigame
 GameManager --> SceneManager
 GameManager --> GameServer
 GameManager --> TreasureHunt
+GameManager --> Hint
 
 GameServer --> HuntDescriptor
 

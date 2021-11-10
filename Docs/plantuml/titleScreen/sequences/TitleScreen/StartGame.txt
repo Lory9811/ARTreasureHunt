@@ -1,0 +1,19 @@
+@startuml
+
+actor Player
+participant TitleScreen
+participant SceneManager
+
+Player -> TitleScreen: StartGame()
+activate TitleScreen
+create TreasureHunt
+TitleScreen -> TreasureHunt: new
+TitleScreen -> TreasureHunt: LoadHunt()
+activate TreasureHunt
+TreasureHunt --> SceneManager: LoadSceneAsync()
+TitleScreen <- TreasureHunt
+deactivate TreasureHunt
+Player <- TitleScreen
+deactivate TitleScreen
+
+@enduml

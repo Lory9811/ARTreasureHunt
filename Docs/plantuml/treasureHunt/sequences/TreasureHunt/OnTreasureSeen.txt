@@ -1,0 +1,30 @@
+@startuml
+
+actor TrackedImageBehaviour
+participant TreasureHunt
+participant GameManager
+participant Minigame
+
+[-> TrackedImageBehaviour: HandleTargetStatusChanged()
+alt begin tracking
+	activate TrackedImageBehaviour
+	TrackedImageBehaviour -> TreasureHunt: OnTreasureSeen()
+	activate TreasureHunt
+	alt GameManager present
+		TreasureHunt -> GameManager: StartChallenge
+		activate GameManager
+		
+		create Minigame
+		GameManager -> Minigame: new
+		GameManager -> Minigame: SetCompletionCallback()
+		
+		TreasureHunt <- GameManager
+		deactivate GameManager
+	end
+	TrackedImageBehaviour <- TreasureHunt
+	deactivate TreasureHunt
+end
+[<- TrackedImageBehaviour
+deactivate TrackedImageBehaviour
+
+@enduml

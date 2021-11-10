@@ -16,6 +16,7 @@ package "UnityEngine" {
 		+Awake()
 		+Update()
 		+FixedUpdate()
+		+SetActive(value: bool)
 	}
 	
 	class Button
