@@ -11,6 +11,7 @@ public class TreasureHunt : MonoBehaviour {
     [System.Serializable]
     public class HuntDescriptor {
         public string format;
+        public string hint;
         public TreasureDescriptor[] treasures;
     }
 
@@ -59,7 +60,8 @@ public class TreasureHunt : MonoBehaviour {
             });
         }
     }
-    
+
+    private string hint;
     private Treasure[] treasures;
     private GameManager gameManager;
 
@@ -69,6 +71,7 @@ public class TreasureHunt : MonoBehaviour {
             Debug.Log(manager);
             if (manager != null) {
                 gameManager = manager;
+                gameManager.DisplayHint(hint);
             }
         };
     }
@@ -98,11 +101,13 @@ public class TreasureHunt : MonoBehaviour {
      * @param server The data source server
      */
     private IEnumerator DoLoad(string id, GameServer server) {
-        yield return SceneManager.LoadSceneAsync("TreasureHunt", LoadSceneMode.Single);
         Debug.Log("Test");
         SceneManager.MoveGameObjectToScene(gameObject, SceneManager.GetActiveScene());
         Debug.Log(server);
         yield return server.DownloadDescriptor(id, (HuntDescriptor descriptor) => {
+            StartCoroutine(server.DownloadHint(descriptor.hint, (string text) => {
+                hint = text;
+            }));
             var treasuresList = new List<Treasure>();
             Debug.Log(treasuresList);
             Debug.Log(descriptor);
@@ -115,6 +120,7 @@ public class TreasureHunt : MonoBehaviour {
             }
             treasures = treasuresList.ToArray();
         });
+        yield return SceneManager.LoadSceneAsync("TreasureHunt", LoadSceneMode.Single);
     }
     
     private IEnumerator SwitchScene() {

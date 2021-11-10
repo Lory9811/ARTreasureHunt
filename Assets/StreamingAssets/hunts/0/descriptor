@@ -1,5 +1,6 @@
 {
   "format": "0",
+  "hint": "hunts/0/hints/start",
   "treasures": [
     {
       "type": "image",

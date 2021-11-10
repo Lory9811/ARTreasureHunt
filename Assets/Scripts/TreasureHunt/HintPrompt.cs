@@ -21,5 +21,6 @@ public class HintPrompt : MonoBehaviour {
 
     public void SetHintText(string hint) {
         hintText.text = hint;
+        Debug.Log("Set hint text: " + hint);
     }
 }

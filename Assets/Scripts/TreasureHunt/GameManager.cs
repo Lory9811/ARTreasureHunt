@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour {
 
     private Dictionary<string, GameObject> minigames;
     private int currentTreasure = 0;
-    private bool inChallenge = false;
+    private bool pauseDetection = false;
 
     void Start() {
         VuforiaBehaviour.Instance.VideoBackground.StartVideoBackgroundRendering();
@@ -20,19 +20,23 @@ public class GameManager : MonoBehaviour {
         }
     }
 
+    public void DisplayHint(string hint, HintPrompt.ConfirmCallback confirmCallback = null) {
+        pauseDetection = true;
+        HintPrompt.GetComponent<HintPrompt>().SetHintText(hint);
+        HintPrompt.GetComponent<HintPrompt>().SetConfirmCallback(() => { pauseDetection = false; } + confirmCallback);
+        HintPrompt.SetActive(true);
+    }
+
     public void StartChallenge(int level, string hint, string minigame) {
         Debug.Log(level);
-        if (level != currentTreasure || inChallenge) return;
-        inChallenge = true;
+        if (level != currentTreasure || pauseDetection) return;
+        pauseDetection = true;
         Debug.Log(minigame.ToLower());
         var game = Instantiate(minigames[minigame.ToLower()]).GetComponent<Minigame>();
         game.SetCompletionCallback((bool status) => {
             Debug.Log("Completed game " + level + " " + status);
             currentTreasure++;
-            HintPrompt.GetComponent<HintPrompt>().SetHintText(hint);
-            HintPrompt.SetActive(true);
-            HintPrompt.GetComponent<HintPrompt>().SetConfirmCallback(() => {
-                inChallenge = false;
+            DisplayHint(hint, () => {
                 game.Cleanup();
             });
         });
