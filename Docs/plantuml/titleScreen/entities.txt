@@ -17,5 +17,6 @@ Button <|-- ButtonCreate
 TitleScreen --> SceneManager
 ButtonPlay --> TitleScreen
 ButtonCreate --> TitleScreen
+TitleScreen --> TreasureHunt
 
 @enduml

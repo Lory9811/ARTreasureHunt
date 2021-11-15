@@ -101,9 +101,9 @@ public class TreasureHunt : MonoBehaviour {
      * @param server The data source server
      */
     private IEnumerator DoLoad(string id, GameServer server) {
-        Debug.Log("Test");
+        yield return SceneManager.LoadSceneAsync("TreasureHunt", LoadSceneMode.Single);
         SceneManager.MoveGameObjectToScene(gameObject, SceneManager.GetActiveScene());
-        Debug.Log(server);
+
         yield return server.DownloadDescriptor(id, (HuntDescriptor descriptor) => {
             StartCoroutine(server.DownloadHint(descriptor.hint, (string text) => {
                 hint = text;
@@ -120,7 +120,6 @@ public class TreasureHunt : MonoBehaviour {
             }
             treasures = treasuresList.ToArray();
         });
-        yield return SceneManager.LoadSceneAsync("TreasureHunt", LoadSceneMode.Single);
     }
     
     private IEnumerator SwitchScene() {

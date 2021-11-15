@@ -14,11 +14,6 @@ deactivate GameServer
 
 loop Foreach treasure in descriptor
 
-TreasureHunt -> GameServer: DownloadTreasure()
-activate GameServer
-TreasureHunt <- GameServer
-deactivate GameServer
-
 create Treasure
 TreasureHunt -> Treasure: new
 

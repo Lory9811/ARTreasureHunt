@@ -1,11 +1,11 @@
 @startuml
 
+left to right direction
+
 [*] --> TitleScreen
 
 TitleScreen --> TreasureHunt : GameStart
-TitleScreen --> Editor : EditorStart
 TreasureHunt --> TitleScreen : QuitToMenu
-Editor --> TitleScreen : QuitToMenu 
 
 state TreasureHunt {
 	[*] --> Searching

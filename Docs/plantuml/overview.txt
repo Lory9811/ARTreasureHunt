@@ -1,0 +1,73 @@
+@startuml
+
+package "GameServer" {
+	abstract GameServer {
+		+DownloadDescriptor(url)
+		+DownloadImage(url)
+		+DownloadHint(url)
+		#GetHuntDescriptorLocation(descriptor): url
+		#GetImageLocation(image): url
+		#GetHintLocation(hint): url
+	}
+
+	class LocalServer {
+		#GetHuntDescriptorLocation(descriptor): url
+		#GetImageLocation(image): url
+		#GetHintLocation(hint): url
+	}
+
+	class RemoteServer {
+		#GetHuntDescriptorLocation(descriptor): url
+		#GetImageLocation(image): url
+		#GetHintLocation(hint): url
+	}
+	
+	GameServer <|-- LocalServer
+	GameServer <|-- RemoteServer
+}
+
+package "TitleScreen" {
+	class ButtonPlay
+	class TitleScreen {
+		+StartGame()
+	}
+	
+	ButtonPlay --> TitleScreen
+}
+
+package "TreasureHunt" {
+	class TreasureHunt {
+		+LoadHunt(id, server)
+		-OnTreasureSeen()
+	}
+	
+	class GameManager {
+		+DisplayHint(hint, callback)
+		+StartChallenge(level, hint, challenge)
+	}
+	
+	class Hint {
+		+SetHintText(text)
+		+SetConfirmCallback(callback)
+	}
+	
+	abstract Minigame {
+		+Start()
+		+SetCompletionCallback()
+	}
+	
+	Minigame <|-- Minigame1
+	Minigame <|-- Minigame2
+	
+	GameManager --> TreasureHunt
+	GameManager --> Hint
+	GameManager --> Minigame
+	
+	TreasureHunt *-- Treasures 
+}
+
+TitleScreen --> GameServer
+TitleScreen --> TreasureHunt
+TreasureHunt --> GameServer
+
+@enduml
