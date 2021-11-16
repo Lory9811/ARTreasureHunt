@@ -19,9 +19,14 @@ package "UnityEngine" {
 		+SetActive(value: bool)
 	}
 	
+	class Text {
+		+text
+	}
+	
 	class Button
 	
 	class AsyncOperation
 	
 	GameObject <|-- Button
+	GameObject <|-- Text
 }

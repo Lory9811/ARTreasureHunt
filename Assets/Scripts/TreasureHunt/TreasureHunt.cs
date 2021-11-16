@@ -68,10 +68,8 @@ public class TreasureHunt : MonoBehaviour {
     void Start() {
         SceneManager.sceneLoaded += (Scene scene, LoadSceneMode mode) => {
             var manager = GameObject.Find("GameManager")?.GetComponent<GameManager>();
-            Debug.Log(manager);
             if (manager != null) {
                 gameManager = manager;
-                gameManager.DisplayHint(hint);
             }
         };
     }
@@ -107,6 +105,7 @@ public class TreasureHunt : MonoBehaviour {
         yield return server.DownloadDescriptor(id, (HuntDescriptor descriptor) => {
             StartCoroutine(server.DownloadHint(descriptor.hint, (string text) => {
                 hint = text;
+                gameManager.DisplayHint(hint);
             }));
             var treasuresList = new List<Treasure>();
             Debug.Log(treasuresList);

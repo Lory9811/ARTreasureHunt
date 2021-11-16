@@ -90,7 +90,8 @@ class Hint {
 GameObject <|-- GameManager
 GameServer <|-- LocalServer
 GameServer <|-- RemoteServer
-GameObject <|-- Hint
+
+Text <|-- Hint
 
 Minigame <|-- Mastermind
 
@@ -99,6 +100,7 @@ GameManager --> SceneManager
 GameManager --> GameServer
 GameManager --> TreasureHunt
 GameManager --> Hint
+GameManager --> Text: ScoreText
 
 GameServer --> HuntDescriptor
 

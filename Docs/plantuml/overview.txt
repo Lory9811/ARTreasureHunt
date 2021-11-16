@@ -51,8 +51,13 @@ package "TreasureHunt" {
 		+SetConfirmCallback(callback)
 	}
 	
+	class ScoreDisplay {
+		+SetText(text)
+	}
+	
 	abstract Minigame {
-		+Start()
+		#Start()
+		#Complete()
 		+SetCompletionCallback()
 	}
 	
@@ -61,6 +66,7 @@ package "TreasureHunt" {
 	
 	GameManager --> TreasureHunt
 	GameManager --> Hint
+	GameManager --> ScoreDisplay
 	GameManager --> Minigame
 	
 	TreasureHunt *-- Treasures 
