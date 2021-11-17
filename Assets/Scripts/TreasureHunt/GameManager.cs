@@ -36,10 +36,8 @@ public class GameManager : MonoBehaviour {
     }
 
     public void StartChallenge(int level, string hint, string minigame) {
-        Debug.Log(level);
         if (pauseDetection || level != currentTreasure) return;
         pauseDetection = true;
-        Debug.Log(minigame.ToLower());
         var game = Instantiate(minigames[minigame.ToLower()]).GetComponent<Minigame>();
         game.SetCompletionCallback((bool status) => {
             Debug.Log("Completed game " + level + " " + status);

@@ -73,3 +73,9 @@ crashlytics-build.properties
 /Packages/
 
 /Docs/doxygen/
+
+/Assets/Resources/settings.json
+/Assets/Resources/settings.json.meta
+/Assets/Resources/VuforiaConfiguration.asset
+/Assets/Resources/VuforiaConfiguration.asset.meta
+
