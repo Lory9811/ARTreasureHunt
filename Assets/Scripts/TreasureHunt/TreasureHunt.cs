@@ -23,29 +23,34 @@ public class TreasureHunt : MonoBehaviour {
         public string type;
         public string url;
         public string hint;
+        public string minigame;
     }
 
     private class Treasure {
-        string hint;
+        public string Hint {
+            get;
+            private set;
+        }
+
+        public int Id {
+            get;
+            private set;
+        }
+
+        public string Name => target.gameObject.name;
+
+        public int Minigame {
+            get;
+            private set;
+        }
+
         ImageTargetBehaviour target;
         int id;
 
         public delegate void DetectionCallback(Treasure treasure);
 
         public Treasure(int id) {
-            this.id = id;
-        }
-
-        public string GetName() {
-            return target.gameObject.name;
-        }
-
-        public int GetId() {
-            return id;
-        }
-
-        public string GetHint() {
-            return hint;
+            Id = id;
         }
 
         public IEnumerator Init(TreasureDescriptor descriptor, GameServer server, DetectionCallback callback) {
@@ -56,7 +61,7 @@ public class TreasureHunt : MonoBehaviour {
                 handler.SetDetectionCallback(() => callback(this));
             });
             yield return server.DownloadHint(descriptor.hint, (string hint) => {
-                this.hint = hint;
+                Hint = hint;
             });
         }
     }
@@ -89,8 +94,8 @@ public class TreasureHunt : MonoBehaviour {
      * @param treasure The detected treasure
      */
     private void OnTreasureSeen(Treasure treasure) {
-        Debug.Log("Found treasure " + treasure.GetName());
-        gameManager?.StartChallenge(treasure.GetId(), treasure.GetHint(), "mastermind");
+        Debug.Log("Found treasure " + treasure.Name);
+        gameManager?.StartChallenge(treasure.Id, treasure.Hint, "mastermind");
     }
 
     /**
