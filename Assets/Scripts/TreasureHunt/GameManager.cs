@@ -48,4 +48,9 @@ public class GameManager : MonoBehaviour {
             });
         });
     }
+
+    public void EndGame(int level) {
+        if (pauseDetection || level != currentTreasure) return;
+        DisplayHint("You win!");
+    }
 }

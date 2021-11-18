@@ -39,13 +39,17 @@ public class TreasureHunt : MonoBehaviour {
 
         public string Name => target.gameObject.name;
 
-        public int Minigame {
+        public string Minigame {
+            get;
+            private set;
+        }
+
+        public string TreasureType {
             get;
             private set;
         }
 
         ImageTargetBehaviour target;
-        int id;
 
         public delegate void DetectionCallback(Treasure treasure);
 
@@ -54,9 +58,11 @@ public class TreasureHunt : MonoBehaviour {
         }
 
         public IEnumerator Init(TreasureDescriptor descriptor, GameServer server, DetectionCallback callback) {
+            TreasureType = descriptor.type;
+            Minigame = descriptor.minigame;
             yield return server.DownloadImage(descriptor.url, (Texture2D texture) => {
                 target = VuforiaBehaviour.Instance.ObserverFactory.CreateImageTarget(
-                    texture, 0.10f, "Treasure_" + id);
+                    texture, 0.10f, "Treasure_" + Id);
                 var handler = target.gameObject.AddComponent<TrackedImageBehaviour>();
                 handler.callback += () => callback(this);
             });
@@ -95,7 +101,11 @@ public class TreasureHunt : MonoBehaviour {
      */
     private void OnTreasureSeen(Treasure treasure) {
         Debug.Log("Found treasure " + treasure.Name);
-        gameManager?.StartChallenge(treasure.Id, treasure.Hint, "mastermind");
+        if (treasure.TreasureType == "final") {
+            gameManager?.EndGame(treasure.Id);
+        } else {
+            gameManager?.StartChallenge(treasure.Id, treasure.Hint, "mastermind");
+        }
     }
 
     /**

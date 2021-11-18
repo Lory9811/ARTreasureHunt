@@ -8,7 +8,7 @@
       "hint": "hunts/0/hints/0"
     },
     {
-      "type": "image",
+      "type": "final",
       "url": "hunts/0/images/3.jpg",
       "hint": "hunts/0/hints/start"
     }
