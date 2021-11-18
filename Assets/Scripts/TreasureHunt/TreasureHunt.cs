@@ -58,7 +58,7 @@ public class TreasureHunt : MonoBehaviour {
                 target = VuforiaBehaviour.Instance.ObserverFactory.CreateImageTarget(
                     texture, 0.10f, "Treasure_" + id);
                 var handler = target.gameObject.AddComponent<TrackedImageBehaviour>();
-                handler.SetDetectionCallback(() => callback(this));
+                handler.callback += () => callback(this);
             });
             yield return server.DownloadHint(descriptor.hint, (string hint) => {
                 Hint = hint;
